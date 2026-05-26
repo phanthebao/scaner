@@ -1,113 +1,113 @@
-!DOCTYPE html
-html lang=vi
-head
-    meta charset=UTF-8
-    meta name=viewport content=width=device-width, initial-scale=1.0
-    titleMáy Quét Đơn Hàng Livetitle
-    script src=httpstelegram.orgjstelegram-web-app.jsscript
-    style
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy Quét Đơn Hàng Live</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
         body {
-            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-            background-color #f4f6f9;
-            color #333;
-            display flex;
-            flex-direction column;
-            align-items center;
-            justify-content center;
-            height 100vh;
-            margin 0;
-            padding 20px;
-            box-sizing border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .container {
-            text-align center;
-            width 100%;
-            max-width 400px;
-            background white;
-            padding 30px 20px;
-            border-radius 16px;
-            box-shadow 0 4px 16px rgba(0,0,0,0.08);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
         .logo {
-            font-size 48px;
-            margin-bottom 10px;
+            font-size: 48px;
+            margin-bottom: 10px;
         }
-        h3 { margin 10px 0 5px 0; color #222; }
-        p { color #666; font-size 14px; margin-bottom 30px; }
+        h3 { margin: 10px 0 5px 0; color: #222; }
+        p { color: #666; font-size: 14px; margin-bottom: 30px; }
         .btn {
-            background-color #0088cc;
-            color white;
-            border none;
-            padding 16px;
-            font-size 16px;
-            border-radius 12px;
-            cursor pointer;
-            font-weight bold;
-            width 100%;
-            margin-bottom 15px;
-            transition background 0.2s;
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: background 0.2s;
         }
-        .btnactive { background-color #006699; }
+        .btn:active { background-color: #006699; }
         .btn-manual {
-            background-color #f0ad4e;
+            background-color: #f0ad4e;
         }
-        .btn-manualactive { background-color #d58512; }
-    style
-head
-body
+        .btn-manual:active { background-color: #d58512; }
+    </style>
+</head>
+<body>
 
-div class=container
-    div class=logo📷div
-    h3MÁY QUÉT ĐƠN HÀNGh3
-    pHệ thống hỗ trợ quét live mã QR VietQR chớp nhoángp
+<div class="container">
+    <div class="logo">📷</div>
+    <h3>MÁY QUÉT ĐƠN HÀNG</h3>
+    <p>Hệ thống hỗ trợ quét live mã QR VietQR chớp nhoáng</p>
     
-    button class=btn onclick=openLiveScanner()📷 Quét Lại Mã QRbutton
-    button class=btn btn-manual onclick=sendManualInput()📝 Nhập Tay Mã Đơnbutton
-div
+    <button class="btn" onclick="openLiveScanner()">📷 Quét Lại Mã QR</button>
+    <button class="btn btn-manual" onclick="sendManualInput()">📝 Nhập Tay Mã Đơn</button>
+</div>
 
-script
+<script>
     let failCount = 0;
 
-     Khởi tạo thư viện Telegram
+    // Khởi tạo thư viện Telegram
     Telegram.WebApp.ready();
-    Telegram.WebApp.expand();  Mở rộng tối đa màn hình app
+    Telegram.WebApp.expand(); // Mở rộng tối đa màn hình app
 
     function openLiveScanner() {
-         Gọi tính năng quét QR gốc siêu nhanh của Telegram
+        // Gọi tính năng quét QR gốc siêu nhanh của Telegram
         Telegram.WebApp.showScanQrPopup({
-            text Lia camera vào mã QR VietQR dán trên kiện hàng
+            text: "Lia camera vào mã QR VietQR dán trên kiện hàng"
         }, function(text) {
             let cleanText = text.trim();
             
-             Kiểm tra xem có đúng định dạng VietQR chứa cụm từ 'Thanh Toan' không
-            if (cleanText.toLowerCase().includes(thanh toan)  cleanText.length = 10) {
-                 Hợp lệ - Bắn dữ liệu về cho Bot xử lý tiếp
+            // Kiểm tra xem có đúng định dạng VietQR chứa cụm từ 'Thanh Toan' không
+            if (cleanText.toLowerCase().includes("thanh toan") || cleanText.length >= 10) {
+                // Hợp lệ -> Bắn dữ liệu về cho Bot xử lý tiếp
                 Telegram.WebApp.sendData(cleanText);
                 Telegram.WebApp.close();
-                return true;  Đóng popup camera
+                return true; // Đóng popup camera
             } else {
                 failCount++;
-                if (failCount = 3) {
-                     Quét lỗi quá 3 lần - Tự động kích hoạt chế độ nhập tay
-                    Telegram.WebApp.sendData(MANUAL_INPUT);
+                if (failCount >= 3) {
+                    // Quét lỗi quá 3 lần -> Tự động kích hoạt chế độ nhập tay
+                    Telegram.WebApp.sendData("MANUAL_INPUT");
                     Telegram.WebApp.close();
                     return true;
                 }
-                 Thông báo lỗi và giữ camera tiếp tục quét lần sau
-                alert(Mã QR không đúng định dạng đơn hàng! (Thất bại  + failCount + 3). Vui lòng quét lại.);
+                // Thông báo lỗi và giữ camera tiếp tục quét lần sau
+                alert("Mã QR không đúng định dạng đơn hàng! (Thất bại " + failCount + "/3). Vui lòng quét lại.");
                 return false; 
             }
         });
     }
 
     function sendManualInput() {
-        Telegram.WebApp.sendData(MANUAL_INPUT);
+        Telegram.WebApp.sendData("MANUAL_INPUT");
         Telegram.WebApp.close();
     }
 
-     Tự động kích hoạt mở camera ngay khi nhân viên vừa bấm nút vào app
+    // Tự động kích hoạt mở camera ngay khi nhân viên vừa bấm nút vào app
     setTimeout(openLiveScanner, 500);
-script
+</script>
 
-body
-html
+</body>
+</html>
